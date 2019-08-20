@@ -32,7 +32,17 @@ module CukeForker
     end
 
     def self.feature_files
-      Dir.glob('**/**.feature')
+      directory = ""
+      if ENV['FEATURE']
+        if ENV['FEATURE'].include?('.feature')
+          directory = ENV['FEATURE']
+        else
+          directory = "#{ENV['FEATURE']}/**/**.feature"
+        end
+      else
+        directory = '**/**.feature'
+      end
+      Dir.glob(directory)
     end
   end
 end

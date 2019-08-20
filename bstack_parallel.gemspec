@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "bstack-parallel"
 
-  s.add_dependency "cucumber", ">= 3.0.0"
+  s.add_dependency "cucumber", ">= 2.99.0"
   s.add_dependency "vnctools", ">= 0.0.5"
   s.add_development_dependency "rspec", "~> 2.5"
   s.add_development_dependency "coveralls"
