@@ -76,6 +76,7 @@ module CukeForker
       end
 
       queue = WorkerQueue.new(max, delay, fail_fast)
+      exit if features.nil?
       features.each do |feature|
         queue.add Worker.new(feature, format, out, extra_args)
       end
