@@ -27,6 +27,11 @@ module CukeForker
       log.info "[    worker  #{worker.id.to_s.ljust 3}   ] #{status_string(worker.failed?).ljust(8)}: #{worker.feature}"
     end
 
+    def long_worker_killed(worker)
+      @running.delete(worker.id)
+      log.info "[    worker  #{worker.id.to_s.ljust 3}   ] killed: #{worker.feature}"
+    end
+
     def on_run_finished(failed)
       log.info "[    run           ] finished, #{status_string failed}"
     end

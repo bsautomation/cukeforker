@@ -7,7 +7,7 @@ module CukeForker
       def id; @id ||= -1; end
     end
 
-    attr_reader :status, :feature, :pid, :format, :out, :id, :data
+    attr_reader :status, :feature, :pid, :format, :out, :id, :data, :time
 
     def initialize(feature, format, out, extra_args = [])
       @feature      = feature
@@ -16,6 +16,7 @@ module CukeForker
       @out          = out
       @status       = nil
       @data         = OpenStruct.new
+      @time         = Time.now.utc
 
       @id = self.class.id += 1
     end

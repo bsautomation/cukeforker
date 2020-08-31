@@ -2,10 +2,11 @@ module CukeForker
   class WorkerQueue
     include Observable
 
-    def initialize(max, delay, fail_fast=false)
+    def initialize(max, delay, fail_fast=false, max_duration = nil)
       @max = max
       @delay = delay
       @fail_fast = fail_fast
+      @max_duration = max_duration
 
       if @max < 0
         raise ArgumentError, "max workers cannot be negative, got #{@max.inspect}"
@@ -55,6 +56,7 @@ module CukeForker
     end
 
     def poll(seconds = nil)
+      kill_long_test
       finished = @running.select { |w| w.finished? }
 
       if finished.empty?
@@ -78,6 +80,16 @@ module CukeForker
 
     def has_failures?
       @finished.any? { |w| w.failed? }
+    end
+
+    def kill_long_test
+      @running.each do |running_worker|
+        execution_time = (Time.now.utc - running_worker.time).to_f.round(2)
+        if execution_time > @max_duration
+          Process.kill("INT", running_worker.pid)
+          finish running_worker, true
+        end
+      end
     end
 
     def eta
@@ -115,11 +127,10 @@ module CukeForker
 
       worker.start
       @running << worker
-
       sleep @delay
     end
 
-    def finish(worker)
+    def finish(worker, long = false)
       @running.delete worker
       @finished << worker
 
@@ -129,7 +140,7 @@ module CukeForker
         @running.clear
       end
 
-      fire :on_worker_finished, worker
+      long ? fire(:long_worker_killed, worker) : fire(:on_worker_finished, worker)
     end
 
     def fire(*args)

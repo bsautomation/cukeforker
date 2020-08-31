@@ -25,15 +25,16 @@ module CukeForker
     include Observable
 
     DEFAULT_OPTIONS = {
-      :max        => 2,
-      :vnc        => false,
-      :record     => false,
-      :notify     => nil,
-      :out        => Dir.pwd,
-      :log        => true,
-      :format     => :html,
-      :delay      => 0,
-      :fail_fast  => false,
+      :max          => 2,
+      :vnc          => false,
+      :record       => false,
+      :notify       => nil,
+      :out          => Dir.pwd,
+      :log          => true,
+      :format       => :html,
+      :delay        => 0,
+      :fail_fast    => false,
+      :max_duration => 600
     }
 
     def self.run(features, opts = {})
@@ -50,6 +51,7 @@ module CukeForker
       extra_args = Array(opts[:extra_args])
       delay      = opts[:delay]
       fail_fast  = opts[:fail_fast]
+      max_duration = opts[:max_duration]
 
       if opts[:log]
         listeners << LoggingListener.new
@@ -75,7 +77,7 @@ module CukeForker
         end
       end
 
-      queue = WorkerQueue.new(max, delay, fail_fast)
+      queue = WorkerQueue.new(max, delay, fail_fast, max_duration)
       exit if features.nil?
       features.each do |feature|
         queue.add Worker.new(feature, format, out, extra_args)
