@@ -86,7 +86,7 @@ module CukeForker
       @running.each do |running_worker|
         execution_time = (Time.now.utc - running_worker.time).to_f.round(2)
         if execution_time > @max_duration
-          Process.kill("INT", running_worker.pid)
+          Process.kill(1, running_worker.pid)
           finish running_worker, true
         end
       end
