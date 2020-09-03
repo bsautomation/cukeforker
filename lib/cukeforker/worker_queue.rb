@@ -126,6 +126,7 @@ module CukeForker
       fire :on_worker_starting, worker
 
       worker.start
+      worker.time = Time.now.utc
       @running << worker
       sleep @delay
     end
