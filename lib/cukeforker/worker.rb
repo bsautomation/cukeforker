@@ -7,7 +7,8 @@ module CukeForker
       def id; @id ||= -1; end
     end
 
-    attr_reader :status, :feature, :pid, :format, :out, :id, :data, :time
+    attr_reader :status, :feature, :pid, :format, :out, :id, :data
+    attr_accessor :time
 
     def initialize(feature, format, out, extra_args = [])
       @feature      = feature
